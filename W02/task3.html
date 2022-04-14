@@ -1,0 +1,66 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>W02: task3</title>
+    </head>
+    <body>
+        <form id="form_recipe" method="post" action="">
+            三角形の面積を求める.
+            <br>
+            x0: <input type="number" id="n1"/>
+            y0: <input type="number" id="n2"/>
+            z0: <input type="number" id="n3"/>
+            <br>
+            x1: <input type="number" id="n4"/>
+            y1: <input type="number" id="n5"/>
+            z1: <input type="number" id="n6"/>
+            <br>
+            x2: <input type="number" id="n7"/>
+            y2: <input type="number" id="n8"/>
+            z2: <input type="number" id="n9"/>
+            <br>
+            <button id="button">計算</button>
+        </form>
+        <label for="resultForm">計算結果: </label>
+        <input type="text" id="resultForm">
+    </body>
+    <script src="vec3.js"></script>
+    <script>
+        // ボタンの要素を取得
+        var button = document.getElementById("button");
+
+        // ボタンをクリックした時の処理
+        button.addEventListener("click", function(e) {
+
+            e.preventDefault();
+
+            var x0 = document.getElementById("n1").value;
+            var y0 = document.getElementById("n2").value;
+            var z0 = document.getElementById("n3").value;
+            var x1 = document.getElementById("n4").value;
+            var y1 = document.getElementById("n5").value;
+            var z1 = document.getElementById("n6").value;
+            var x2 = document.getElementById("n7").value;
+            var y2 = document.getElementById("n8").value;
+            var z2 = document.getElementById("n9").value;
+
+            var v0 = new Vec3(x0, y0, z0);
+            var v1 = new Vec3(x1, y1, z1);
+            var v2 = new Vec3(x2, y2, z2);
+
+            var v01 = v1.sub(v0);
+            var v02 = v2.sub(v0);
+
+            var answer = v01.cross(v2).length() / 2;
+
+            var resultForm = document.getElementById("resultForm");
+            resultForm.value = answer;
+        });
+
+    </script>
+
+
+
+
+
+</html>
