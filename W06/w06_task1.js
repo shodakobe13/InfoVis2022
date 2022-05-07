@@ -39,6 +39,7 @@ class ScatterPlot {
         self.chart = self.svg.append('g')
             .attr('transform', `translate(${self.config.margin.left}, ${self.config.margin.top})`);
 
+
         self.inner_width = self.config.width - self.config.margin.left - self.config.margin.right;
         self.inner_height = self.config.height - self.config.margin.top - self.config.margin.bottom;
 
@@ -59,6 +60,8 @@ class ScatterPlot {
 
         self.yaxis_group = self.chart.append('g')
             .attr('transform', `translate(0, 0)`);
+
+
     }
 
     update() {
@@ -69,7 +72,7 @@ class ScatterPlot {
         self.xscale.domain( [xmin, xmax] );
 
         const ymin = 0;
-        const ymax = d3.max( self.data, d => d.y ) +20;
+        const ymax = d3.max( self.data, d => d.y ) + 20;
         self.yscale.domain( [ymin, ymax] );
 
         self.render();
@@ -88,6 +91,7 @@ class ScatterPlot {
 
         self.xaxis_group
             .call( self.xaxis );
+
 
         self.yaxis_group
             .call( self.yaxis );
