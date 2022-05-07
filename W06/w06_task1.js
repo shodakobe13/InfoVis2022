@@ -43,16 +43,6 @@ class ScatterPlot {
         self.inner_width = self.config.width - self.config.margin.left - self.config.margin.right;
         self.inner_height = self.config.height - self.config.margin.top - self.config.margin.bottom;
 
-        self.title = self.svg.append("g")
-            .attr("transform", "translate(200,20)")
-            .append("text")
-            .attr("fill", "black")
-            .attr("x", 20)
-            .attr("y", 0)
-            .attr("font-size", "10pt")
-            .attr("font-weight", "bold")
-            .text("Task2");
-
         self.xscale = d3.scaleLinear()
             .range( [0, self.inner_width] );
 
@@ -101,7 +91,7 @@ class ScatterPlot {
 
         self.xaxis_group
             .call( self.xaxis );
-        
+
         self.yaxis_group
             .call( self.yaxis );
     }
