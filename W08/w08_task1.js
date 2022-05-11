@@ -101,27 +101,9 @@ class BarPlot {
             .attr("height", yscale.bandwidth());
 
         self.xaxis_group
-            .call( self.xaxis )
-            .append("text")
-            .attr("fill", "black")
-            .attr("x", 140)
-            .attr("y", 35)
-            .attr("text-anchor", "middle")
-            .attr("font-size", "10pt")
-            .attr("font-weight", "bold")
-            .text("");
+            .call( self.xaxis );
 
         self.yaxis_group
-            .call( self.yaxis )
-            .append("text")
-            .attr("fill", "black")
-            .attr("text-anchor", "middle")
-            .attr("x", -90)
-            .attr("y", -40)
-            .attr("transform", "rotate(-90)")
-            .attr("text-anchor", "middle")
-            .attr("font-size", "10pt")
-            .attr("font-weight", "bold")
-            .text("日付");
+            .call( self.yaxis );
     }
 }
