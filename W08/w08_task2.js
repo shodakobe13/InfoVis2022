@@ -1,11 +1,11 @@
-d3.csv("https://shodakobe13.github.io/InfoVis2022/W08/w08_task1.csv")
+d3.csv("https://shodakobe13.github.io/InfoVis2022/W08/w08_task2.csv")
     .then( data => {
-        data.forEach( d => { d.value = +d.value;  });
+        data.forEach( d => { d.x = +d.x; d.y = +d.y; });
         var config = {
             parent: '#drawing_region',
             width: 300,
             height: 200,
-            margin: {top:40, right:10, bottom:30, left:60}
+            margin: {top:40, right:10, bottom:30, left:50}
         };
 
         const bar_plot = new BarPlot( config, data );
@@ -45,7 +45,7 @@ class BarPlot {
             .range( [0, self.inner_width] );
 
         self.yscale = d3.scaleBand()
-            .domain(self.data.map(d => d.label))
+            .domain(self.data.map(d => d.y))
             .range( [self.inner_height, 0] )
             .paddingInner(0.1);
 
@@ -78,9 +78,9 @@ class BarPlot {
     update() {
         let self = this;
         const xmin = 0;
-        const xmax = d3.max( self.data, d => d.value );
+        const xmax = d3.max( self.data, d => d.x );
         self.xscale.domain( [xmin, xmax] );
-        self.yscale.domain( self.data.map(d => d.label) )
+        self.yscale.domain( self.data.map(d => d.y) )
         self.render();
     }
 
@@ -92,8 +92,8 @@ class BarPlot {
             .enter()
             .append("rect")
             .attr("x", 0 )
-            .attr("y", d => self.yscale( d.label ) )
-            .attr("width", d => self.xscale( d.value ) )
+            .attr("y", d => self.yscale( d.y ) )
+            .attr("width", d => self.xscale( d.x ) )
             .attr("height", self.yscale.bandwidth());
 
         self.xaxis_group
