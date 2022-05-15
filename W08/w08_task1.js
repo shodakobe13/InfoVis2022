@@ -70,9 +70,6 @@ class BarPlot {
             .attr("font-size", "10pt")
             .attr("font-weight", "bold")
             .text("Task1");
-
-
-
     }
 
     update() {
