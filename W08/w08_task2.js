@@ -5,8 +5,8 @@ d3.csv("https://shodakobe13.github.io/InfoVis2022/W08/w08_task2.csv")
         var config = {
             parent: '#drawing_region',
             width: 275,
-            height: 300,
-            margin: {top:40, right:10, bottom:45, left:50}
+            height: 150,
+            margin: {top:30, right:10, bottom:20, left:50}
         };
 
         const line = new Linechart( config, data );
@@ -56,7 +56,7 @@ class Linechart {
             .range( [0, self.inner_width] );
 
         self.yscale = d3.scaleLinear()
-            .range( [self.inner_height, 0] );
+            .range( [0, self.inner_height] );
 
         self.xaxis = d3.axisBottom( self.xscale )
             .ticks(8);
