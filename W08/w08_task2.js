@@ -4,7 +4,7 @@ d3.csv("https://shodakobe13.github.io/InfoVis2022/W08/w08_task2.csv")
 
         var config = {
             parent: '#drawing_region',
-            width: 400,
+            width: 275,
             height: 300,
             margin: {top:40, right:10, bottom:45, left:50}
         };
@@ -46,7 +46,7 @@ class Linechart {
             .attr("transform", "translate(180,20)")
             .append("text")
             .attr("fill", "black")
-            .attr("x", 20)
+            .attr("x", -40)
             .attr("y", 0)
             .attr("font-size", "10pt")
             .attr("font-weight", "bold")
@@ -80,11 +80,11 @@ class Linechart {
         let self = this;
 
         const xmin = 0;
-        const xmax = d3.max( self.data, d => d.x ) + 10;
+        const xmax = d3.max( self.data, d => d.x );
         self.xscale.domain( [xmin, xmax] );
 
         const ymin = 0;
-        const ymax = d3.max( self.data, d => d.y ) + 20;
+        const ymax = d3.max( self.data, d => d.y );
         self.yscale.domain( [ymin, ymax] );
 
         self.render();
@@ -94,7 +94,9 @@ class Linechart {
         let self = this;
 
         self.chart.append("path")
-            .attr("d",self.line(self.data));
+            .attr("d",self.line(self.data))
+            .attr('stroke', 'black')
+            .attr('fill', 'none');
 
         self.xaxis_group
             .call( self.xaxis )
