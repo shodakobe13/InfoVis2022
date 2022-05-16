@@ -46,7 +46,7 @@ class Linechart {
             .attr("transform", "translate(180,20)")
             .append("text")
             .attr("fill", "black")
-            .attr("x", -40)
+            .attr("x", -50)
             .attr("y", 0)
             .attr("font-size", "10pt")
             .attr("font-weight", "bold")
@@ -99,27 +99,17 @@ class Linechart {
             .attr('fill', 'none');
 
         self.xaxis_group
-            .call( self.xaxis )
-            .append("text")
-            .attr("fill", "black")
-            .attr("x", 170)
-            .attr("y", 40)
-            .attr("text-anchor", "middle")
-            .attr("font-size", "10pt")
-            .attr("font-weight", "bold")
-            .text("x-label");
+            .call( self.xaxis );
 
         self.yaxis_group
-            .call( self.yaxis )
-            .append("text")
-            .attr("fill", "black")
-            .attr("text-anchor", "middle")
-            .attr("x", -110)
-            .attr("y", -35)
-            .attr("transform", "rotate(-90)")
-            .attr("text-anchor", "middle")
-            .attr("font-size", "10pt")
-            .attr("font-weight", "bold")
-            .text("y-label");
+            .call( self.yaxis );
+
+        self.chart.selectAll("circle").data( self.data )
+            .enter()
+            .append("circle")
+            .attr("cx", self.line.x())
+            .attr("cy", self.line.y())
+            .attr("r", 3)
+            .attr("fill", "#000");
     }
 }
