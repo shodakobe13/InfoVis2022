@@ -31,42 +31,32 @@ class PieChart {
     init() {
         let self = this;
 
+        self.color = d3.scaleOrdinal()
+            .range(["#fa8072", "#D8C99B", "#D8973C", "#BD632F", "#ffd700"]);
+
         self.svg = d3.select( self.config.parent )
             .attr('width', self.config.width)
             .attr('height', self.config.height)
             .append('g')
-            .attr('transform', `translate(${width/2}, ${height/2})`);
+            .attr('transform', `translate(${self.config.width/2}, ${self.config.height/2})`);
 
         self.pie = d3.pie()
             .value( d => d.value );
 
-        self.radius = Math.min( width, height ) / 2;
+        self.radius = Math.min( self.config.width, self.config.height ) / 2;
 
         self.arc = d3.arc()
-            .innerRadius(self.radius/3)
+            .innerRadius(self.radius/2)
             .outerRadius(self.radius);
 
+        self.label_arc = d3.arc()
+            .outerRadius(self.radius-20)
+            .innerRadius(self.radius-20);
 
-
-
-
-        self.title = self.svg.append("g")
-            .attr("transform", "translate(150,20)")
-            .append("text")
-            .attr("fill", "black")
-            .attr("x", 0)
-            .attr("y", 0)
-            .attr("font-size", "10pt")
-            .attr("font-weight", "bold")
-            .text("Task3");
     }
 
     update() {
         let self = this;
-        const xmin = 0;
-        const xmax = d3.max( self.data, d => d.value );
-        self.xscale.domain( [xmin, xmax] );
-        self.yscale.domain( self.data.map(d => d.label) )
         self.render();
     }
 
@@ -78,9 +68,21 @@ class PieChart {
             .enter()
             .append('path')
             .attr('d', self.arc)
-            .attr('fill', 'black')
-            .attr('stroke', 'white')
-            .style('stroke-width', '2px');
+            .style("fill", function(d,i){
+                return self.color(i);
+            })
+            .attr('stroke', 'white');
+
+        self.svg.selectAll("text")
+            .data( self.pie(self.data) )
+            .enter()
+            .append("text")
+            .attr("fill", "black")
+            .attr("x", -30)
+            .attr("y", 5)
+            .attr("transform", function(d) { return "translate(" + self.label_arc.centroid(d) + ")"; })
+            .attr("font", "3px")
+            .text(function(d) { return d.data.label });
 
     }
 }
