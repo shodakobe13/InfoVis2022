@@ -4,7 +4,7 @@ d3.csv("https://shodakobe13.github.io/InfoVis2022/W08/w08_task2.csv")
 
         var config = {
             parent: '#drawing_region',
-            width: 275,
+            width: 260,
             height: 150,
             margin: {top:30, right:10, bottom:20, left:50}
         };
