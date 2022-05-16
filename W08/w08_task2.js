@@ -9,14 +9,14 @@ d3.csv("https://shodakobe13.github.io/InfoVis2022/W08/w08_task2.csv")
             margin: {top:30, right:10, bottom:20, left:50}
         };
 
-        const line = new Linechart( config, data );
+        const line = new LineChart( config, data );
         line.update();
     })
     .catch( error => {
         console.log( error );
     });
 
-class Linechart {
+class LineChart {
 
     constructor( config, data ) {
         this.config = {
