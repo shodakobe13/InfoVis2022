@@ -1,4 +1,4 @@
-d3.csv("https://shodakobe13.github.io/InfoVis2022/W08/w08_task1.csv")
+d3.csv("https://shodakobe13.github.io/InfoVis2022/W10/w10_task1.csv")
     .then( data => {
         data.forEach( d => { d.value = +d.value;  });
         var config = {
@@ -32,6 +32,9 @@ class BarPlot {
 
     init() {
         let self = this;
+
+        self.color = d3.scaleOrdinal()
+            .range(["#fa8072", "#D8C99B", "#D8973C", "#BD632F", "#ffd700"]);
 
         self.svg = d3.select( self.config.parent )
             .attr('width', self.config.width)
@@ -88,20 +91,32 @@ class BarPlot {
 
         self.chart.selectAll("rect")
             .data(self.data)
-            .enter()
-            .append("rect")
+            .join("rect")
             .transition().duration(1000)
             .attr("x", 0 )
             .attr("y", d => self.yscale( d.label ) )
             .attr("width", d => self.xscale( d.value ) )
-            .attr("height", self.yscale.bandwidth());
-
+            .attr("height", self.yscale.bandwidth())
+            .style("fill", function(d){ return d.color; });
 
         d3.select('#reverse')
             .on('click', d => {
                 self.data.reverse();
                 self.update();
             });
+
+        d3.select('#descend')
+            .on('click', d => {
+                self.data.sort((a, b) => b.value - a.value);
+                self.update();
+            });
+
+        d3.select('#ascend')
+            .on('click', d => {
+                self.data.sort((a, b) => a.value - b.value);
+                self.update();
+            });
+
 
 
         self.xaxis_group
