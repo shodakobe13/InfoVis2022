@@ -6,7 +6,7 @@ d3.csv("https://shodakobe13.github.io/InfoVis2022/W10/w10_task2.csv")
             parent: '#drawing_region',
             width: 400,
             height: 300,
-            margin: {top:50, right:20, bottom:50, left:100}
+            margin: {top:30, right:20, bottom:50, left:100}
         };
 
         const scatter_plot = new ScatterPlot( config, data );
@@ -98,11 +98,13 @@ class ScatterPlot {
             .attr("cx", d => self.xscale( d.x ) )
             .attr("cy", d => self.yscale( d.y ) )
             .attr("r", d => d.r )
-            .style("fill", function(d){ return d.color; });
+            .style("fill", function(d){ return d.color; })
             .on('mouseover', (e,d) => {
                 d3.select('#tooltip')
                     .style('opacity', 1)
                     .html(`<div class="tooltip-label">Position</div>(${d.x}, ${d.y})`);
+                d3.select(this)
+                    .style("fill","black");
             })
             .on('mousemove', (e) => {
                 const padding = 10;
@@ -113,6 +115,8 @@ class ScatterPlot {
             .on('mouseleave', () => {
                 d3.select('#tooltip')
                     .style('opacity', 0);
+                d3.select(this)
+                    .style("fill", function(d){ return d.color; })
             });
 
         self.xaxis_group
