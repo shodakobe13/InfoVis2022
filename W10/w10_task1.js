@@ -33,9 +33,6 @@ class BarPlot {
     init() {
         let self = this;
 
-        self.color = d3.scaleOrdinal()
-            .range(["#fa8072", "#D8C99B", "#D8973C", "#BD632F", "#ffd700"]);
-
         self.svg = d3.select( self.config.parent )
             .attr('width', self.config.width)
             .attr('height', self.config.height);
