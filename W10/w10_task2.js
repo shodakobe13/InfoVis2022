@@ -100,10 +100,6 @@ class ScatterPlot {
             .attr("r", d => d.r )
             .style("fill", "black")
             .on('mouseover', (e,d) => {
-                d3.select(this)
-                    .transition()
-                    .duration(250)
-                    .attr("fill", "red");
                 d3.select('#tooltip')
                     .style('opacity', 1)
                     .html(`<div class="tooltip-label">Position</div>(${d.x}, ${d.y})`);
