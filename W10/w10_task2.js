@@ -98,13 +98,15 @@ class ScatterPlot {
             .attr("cx", d => self.xscale( d.x ) )
             .attr("cy", d => self.yscale( d.y ) )
             .attr("r", d => d.r )
-            .style("fill", function(d){ return d.color; })
+            .style("fill", "black")
             .on('mouseover', (e,d) => {
+                d3.select(this)
+                    .transition()
+                    .duration(250)
+                    .attr("fill", "red");
                 d3.select('#tooltip')
                     .style('opacity', 1)
                     .html(`<div class="tooltip-label">Position</div>(${d.x}, ${d.y})`);
-                d3.select(this)
-                    .style("fill","black");
             })
             .on('mousemove', (e) => {
                 const padding = 10;
@@ -115,8 +117,6 @@ class ScatterPlot {
             .on('mouseleave', () => {
                 d3.select('#tooltip')
                     .style('opacity', 0);
-                d3.select(this)
-                    .style("fill", function(d){ return d.color; })
             });
 
         self.xaxis_group
