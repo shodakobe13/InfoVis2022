@@ -2,6 +2,7 @@ let input_data;
 let line_chart
 let bar_chart;
 let scatter_plot;
+let filter = [];
 
 d3.csv("https://shodakobe13.github.io/InfoVis2022/final/final_data.csv")
     .then( data => {
@@ -46,3 +47,13 @@ d3.csv("https://shodakobe13.github.io/InfoVis2022/final/final_data.csv")
     .catch( error => {
         console.log( error );
     });
+
+function Filter() {
+    if ( filter.length == 0 ) {
+        scatter_plot.data = input_data;
+    }
+    else {
+        scatter_plot.data = input_data.filter( d => filter.includes( d.species ) );
+    }
+    scatter_plot.update();
+}

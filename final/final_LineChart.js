@@ -33,7 +33,7 @@ class LineChart {
             .range([0, self.inner_height]);
 
         self.xaxis = d3.axisBottom(self.xscale)
-            .ticks(['2020-1Q','2020-2Q','2020-3Q','2020-4Q','2021-1Q','2021-2Q','2021-3Q','2021-4Q','2022-1Q'])
+            .ticks(['2020-1Q','2020-2Q','2020-3Q','2020-4Q','2021-1Q','2021-2Q','2021-3Q','2021-4Q'])
             .tickSizeOuter(0);
 
         self.yaxis = d3.axisLeft(self.yscale)
