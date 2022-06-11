@@ -2,12 +2,11 @@ class BarChart {
     constructor (config, data) {
         this.config = {
             parent: config.parent,
-            width: config.width || 256,
+            width: config.width || 512,
             height: config.height || 256,
             margin: config.margin || {top:10, right:10, bottom:10, left:10},
             xlabel: config.xlabel || '',
             ylabel: config.ylabel || '',
-            cscale: config.cscale
         };
         this.data = data;
         this.init();
@@ -35,7 +34,7 @@ class BarChart {
             .range([self.inner_height, 0]);
 
         self.xaxis = d3.axisBottom(self.xscale)
-            .ticks(['','versicolor','virginica'])
+            .ticks(['2020-1Q','2020-2Q','2020-3Q','2020-4Q','2021-1Q','2021-2Q','2021-3Q','2021-4Q'])
             .tickSizeOuter(0);
 
         self.yaxis = d3.axisLeft(self.yscale)
@@ -59,7 +58,7 @@ class BarChart {
             .style('font-size', '12px')
             .attr('transform', `rotate(-90)`)
             .attr('y', self.config.margin.left - ylabel_space)
-            .attr('x', -(self.config.height / 2))
+            .attr('x', -(self.config.height / 2) + 20)
             .attr('text-anchor', 'middle')
             .attr('dy', '1em')
             .text( self.config.ylabel );
@@ -68,10 +67,9 @@ class BarChart {
     update() {
         let self = this;
 
-        const data_map = d3.rollup( self.data, v => v.length, d => d.species );
+        const data_map = d3.rollup( self.data, v => v.corona_number, d => d.period );
         self.aggregated_data = Array.from( data_map, ([key,count]) => ({key,count}) );
 
-        self.cvalue = d => d.key;
         self.xvalue = d => d.key;
         self.yvalue = d => d.count;
 
@@ -96,7 +94,6 @@ class BarChart {
             .attr("y", d => self.yscale( self.yvalue(d) ) )
             .attr("width", self.xscale.bandwidth())
             .attr("height", d => self.inner_height - self.yscale( self.yvalue(d) ))
-            .attr("fill", d => self.config.cscale( self.cvalue(d) ))
             .on('click', function(ev,d) {
                 const is_active = filter.includes(d.key);
                 if ( is_active ) {

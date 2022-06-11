@@ -2,7 +2,7 @@ class LineChart {
     constructor (config, data) {
         this.config = {
             parent: config.parent,
-            width: config.width || 256,
+            width: config.width || 512,
             height: config.height || 256,
             margin: config.margin || {top:10, right:10, bottom:10, left:10},
             title: config.title || '',
@@ -33,7 +33,7 @@ class LineChart {
             .range([0, self.inner_height]);
 
         self.xaxis = d3.axisBottom(self.xscale)
-            .ticks(5)
+            .ticks(['2020-1Q','2020-2Q','2020-3Q','2020-4Q','2021-1Q','2021-2Q','2021-3Q','2021-4Q','2022-1Q'])
             .tickSizeOuter(0);
 
         self.yaxis = d3.axisLeft(self.yscale)
@@ -56,15 +56,17 @@ class LineChart {
 
         const xlabel_space = 40;
         self.svg.append('text')
+            .style('font-size', '12px')
             .attr('x', self.config.width / 2)
             .attr('y', self.inner_height + self.config.margin.top + xlabel_space)
             .text( self.config.xlabel );
 
         const ylabel_space = 50;
         self.svg.append('text')
+            .style('font-size', '12px')
             .attr('transform', `rotate(-90)`)
             .attr('y', self.config.margin.left - ylabel_space)
-            .attr('x', -(self.config.height / 2))
+            .attr('x', -(self.config.height / 2) + 20)
             .attr('text-anchor', 'middle')
             .attr('dy', '1em')
             .text( self.config.ylabel );
@@ -74,21 +76,21 @@ class LineChart {
         let self = this;
 
         const space = 5;
-        const xmin = d3.min(self.data, d => d.x) - space;
-        const xmax = d3.max(self.data, d => d.x) + space;
+        const xmin = d3.min(self.data, d => d.number) - space;
+        const xmax = d3.max(self.data, d => d.number * 55) + space;
         self.xscale.domain([xmin, xmax]);
 
-        const ymin = d3.min(self.data, d => d.y) - space;
-        const ymax = d3.max(self.data, d => d.y) + space;
+        const ymin = d3.min(self.data, d => d.gameSoft_number) - space;
+        const ymax = d3.max(self.data, d => d.gameSoft_number) + space;
         self.yscale.domain([ymax, ymin]);
 
         self.line = d3.line()
-            .x( d => self.xscale(d.x) )
-            .y( d => self.yscale(d.y) );
+            .x( d => self.xscale(d.number * 55) )
+            .y( d => self.yscale(d.gameSoft_number) );
 
         self.area = d3.area()
-            .x( d => self.xscale(d.x) )
-            .y1( d => self.yscale(d.y) )
+            .x( d => self.xscale(d.number * 55) )
+            .y1( d => self.yscale(d.gameSoft_number) )
             .y0( self.inner_height );
 
         self.render();
