@@ -35,7 +35,7 @@ class BarChart {
             .range([self.inner_height, 0]);
 
         self.xaxis = d3.axisBottom(self.xscale)
-            .ticks(['setosa','versicolor','virginica'])
+            .ticks(['','versicolor','virginica'])
             .tickSizeOuter(0);
 
         self.yaxis = d3.axisLeft(self.yscale)

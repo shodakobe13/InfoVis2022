@@ -1,18 +1,33 @@
 let input_data;
-let scatter_plot;
+let line_chart;
 let bar_chart;
+let scatter_plot;
 let filter = [];
 
-d3.csv("https://vizlab-kobe-lecture.github.io/InfoVis2021/W12/iris.csv")
+d3.csv("https://shodakobe13.github.io/InfoVis2022/final/final_data_csv")
     .then( data => {
         input_data = data;
         input_data.forEach( d => {
-            d.sepal_length = +d.sepal_length;
-            d.sepal_width = +d.sepal_width;
+            d.corona_number = +d.corona_number;
+            d.gameSoft_number = +d.gameSoft_number;
         });
 
-        const color_scale = d3.scaleOrdinal( d3.schemeCategory10 );
-        color_scale.domain(['setosa','versicolor','virginica']);
+
+        line_chart = new LineChart({
+
+
+            }
+        );
+
+        bar_chart = new BarChart( {
+            parent: '#drawing_region_barchart',
+            width: 256,
+            height: 256,
+            margin: {top:10, right:10, bottom:50, left:50},
+            xlabel: 'Species',
+            cscale: color_scale
+        }, input_data );
+        bar_chart.update();
 
         scatter_plot = new ScatterPlot( {
             parent: '#drawing_region_scatterplot',
@@ -25,15 +40,6 @@ d3.csv("https://vizlab-kobe-lecture.github.io/InfoVis2021/W12/iris.csv")
         }, input_data );
         scatter_plot.update();
 
-        bar_chart = new BarChart( {
-            parent: '#drawing_region_barchart',
-            width: 256,
-            height: 256,
-            margin: {top:10, right:10, bottom:50, left:50},
-            xlabel: 'Species',
-            cscale: color_scale
-        }, input_data );
-        bar_chart.update();
     })
     .catch( error => {
         console.log( error );
