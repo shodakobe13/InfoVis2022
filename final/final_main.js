@@ -1,5 +1,5 @@
 let input_data;
-let line_chart;
+let line_chart
 let bar_chart;
 let scatter_plot;
 let filter = [];
@@ -12,11 +12,15 @@ d3.csv("https://shodakobe13.github.io/InfoVis2022/final/final_data_csv")
             d.gameSoft_number = +d.gameSoft_number;
         });
 
+        const color_scale = d3.scaleOrdinal( d3.schemeCategory10 );
+        color_scale.domain(['setosa','versicolor','virginica']);
 
         line_chart = new LineChart({
 
 
+
             }
+
         );
 
         bar_chart = new BarChart( {
