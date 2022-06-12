@@ -54,9 +54,10 @@ class BarChart {
 
         const ylabel_space = 50;
         self.svg.append('text')
+            .style('font-size', '12px')
             .attr('transform', `rotate(-90)`)
             .attr('y', self.config.margin.left - ylabel_space)
-            .attr('x', -(self.config.height / 2))
+            .attr('x', -(self.config.height / 2) + 20)
             .attr('text-anchor', 'middle')
             .attr('dy', '1em')
             .text( self.config.ylabel );
@@ -82,13 +83,12 @@ class BarChart {
         let self = this;
 
         self.chart.selectAll("rect")
-            .data(self.aggregated_data)
+            .data(self.data)
             .join("rect")
             .attr("x", d => self.xscale( self.xvalue(d) ) )
             .attr("y", d => self.yscale( self.yvalue(d) ) )
             .attr("width", self.xscale.bandwidth())
-            .attr("height", d => self.inner_height - self.yscale( self.yvalue(d) ))
-            .attr("fill", d => self.config.cscale( self.cvalue(d) ));
+            .attr("height", d => self.inner_height - self.yscale( self.yvalue(d) ));
 
         self.xaxis_group
             .call(self.xaxis);

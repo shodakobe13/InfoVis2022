@@ -17,7 +17,7 @@ d3.csv("https://shodakobe13.github.io/InfoVis2022/W15/final_data.csv")
             height: 256,
             margin: {top:10, right:10, bottom:50, left:50},
             xlabel: 'Year/Mon',
-            ylabel: 'temperaturer',
+            ylabel: 'temperature',
         }, input_data );
         line_chart.update();
 
@@ -27,7 +27,7 @@ d3.csv("https://shodakobe13.github.io/InfoVis2022/W15/final_data.csv")
             height: 256,
             margin: {top:10, right:10, bottom:50, left:50},
             xlabel: 'Year/Mon',
-            ylabel: 'number',
+            ylabel: 'corona-number',
         }, input_data );
         bar_chart.update();
 
