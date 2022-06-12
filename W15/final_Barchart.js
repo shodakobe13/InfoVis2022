@@ -1,13 +1,13 @@
-class LineChart {
+class BarChart {
     constructor (config, data) {
         this.config = {
             parent: config.parent,
             width: config.width || 512,
             height: config.height || 256,
             margin: config.margin || {top:10, right:10, bottom:10, left:10},
-            title: config.title || '',
             xlabel: config.xlabel || '',
-            ylabel: config.ylabel || ''
+            ylabel: config.ylabel || '',
+            cscale: config.cscale
         };
         this.data = data;
         this.init();
@@ -26,35 +26,26 @@ class LineChart {
         self.inner_width = self.config.width - self.config.margin.left - self.config.margin.right;
         self.inner_height = self.config.height - self.config.margin.top - self.config.margin.bottom;
 
-        self.xscale = d3.scaleLinear()
-            .range([0, self.inner_width]);
+        self.xscale = d3.scaleBand()
+            .range([0, self.inner_width])
+            .paddingInner(0.2)
+            .paddingOuter(0.1);
 
         self.yscale = d3.scaleLinear()
-            .range([0, self.inner_height]);
+            .range([self.inner_height, 0]);
 
         self.xaxis = d3.axisBottom(self.xscale)
-            .tickFormat(function(d, i){
-                return "202" + parseInt(i/12) + "-" + (((d/50)%4)+1)
-            })
+            .ticks(['setosa','versicolor','virginica'])
             .tickSizeOuter(0);
 
         self.yaxis = d3.axisLeft(self.yscale)
-            .ticks(4)
+            .ticks(5)
             .tickSizeOuter(0);
 
         self.xaxis_group = self.chart.append('g')
             .attr('transform', `translate(0, ${self.inner_height})`);
 
         self.yaxis_group = self.chart.append('g');
-
-        const title_space = 10;
-        self.svg.append('text')
-            .style('font-size', '20px')
-            .style('font-weight', 'bold')
-            .attr('text-anchor', 'middle')
-            .attr('x', self.config.width / 2)
-            .attr('y', self.config.margin.top - title_space)
-            .text( self.config.title );
 
         const xlabel_space = 40;
         self.svg.append('text')
@@ -68,7 +59,7 @@ class LineChart {
             .style('font-size', '12px')
             .attr('transform', `rotate(-90)`)
             .attr('y', self.config.margin.left - ylabel_space)
-            .attr('x', -(self.config.height / 2) + 20)
+            .attr('x', -(self.config.height / 2))
             .attr('text-anchor', 'middle')
             .attr('dy', '1em')
             .text( self.config.ylabel );
@@ -86,36 +77,36 @@ class LineChart {
         const ymax = d3.max(self.data, d => d.temperature) + space;
         self.yscale.domain([ymax, ymin]);
 
-        self.line = d3.line()
-            .x( d => self.xscale(d.number * 50) )
-            .y( d => self.yscale(d.temperature) );
-
         self.render();
     }
 
     render() {
         let self = this;
 
-        const line_width = 3;
-        const line_color = 'firebrick';
-        self.chart.append("path")
-            .attr('d', self.line(self.data))
-            .attr('stroke', line_color)
-            .attr('stroke-width', line_width)
-            .attr('fill', 'none');
-
-        const circle_radius = 5;
-        const circle_color = 'firebrick';
-        self.chart.selectAll("circle")
+        self.chart.selectAll(".bar")
             .data(self.data)
-            .enter()
-            .append("circle")
-            .attr('cx', self.line.x())
-            .attr('cy', self.line.y())
-            .attr('r', circle_radius)
-            .attr('fill', circle_color);
+            .join("rect")
+            .attr("class", "bar")
+            .attr("x", d => self.xscale( self.xvalue(d) ) )
+            .attr("y", d => self.yscale( self.yvalue(d) ) )
+            .attr("width", self.xscale.bandwidth())
+            .attr("height", d => self.inner_height - self.yscale( self.yvalue(d) ))
+            .on('click', function(ev,d) {
+                const is_active = filter.includes(d.key);
+                if ( is_active ) {
+                    filter = filter.filter( f => f !== d.key );
+                }
+                else {
+                    filter.push( d.key );
+                }
+                Filter();
+                d3.select(this).classed('active', !is_active);
+            });
 
-        self.xaxis_group.call(self.xaxis);
-        self.yaxis_group.call(self.yaxis);
+        self.xaxis_group
+            .call(self.xaxis);
+
+        self.yaxis_group
+            .call(self.yaxis);
     }
 }
