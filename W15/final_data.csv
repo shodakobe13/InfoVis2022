@@ -1,4 +1,4 @@
-number,period,corona-number,temperature
+number,period,corona_number,temperature
 0,20/1,0,8.8
 1,20/2,0,8.2
 2,20/3,148,11.4
