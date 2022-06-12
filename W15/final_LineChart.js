@@ -1,12 +1,13 @@
-class BarChart {
+class LineChart {
     constructor (config, data) {
         this.config = {
             parent: config.parent,
             width: config.width || 512,
             height: config.height || 256,
             margin: config.margin || {top:10, right:10, bottom:10, left:10},
+            title: config.title || '',
             xlabel: config.xlabel || '',
-            ylabel: config.ylabel || '',
+            ylabel: config.ylabel || ''
         };
         this.data = data;
         this.init();
@@ -25,16 +26,16 @@ class BarChart {
         self.inner_width = self.config.width - self.config.margin.left - self.config.margin.right;
         self.inner_height = self.config.height - self.config.margin.top - self.config.margin.bottom;
 
-        self.xscale = d3.scaleBand()
-            .range([0, self.inner_width])
-            .paddingInner(0.2)
-            .paddingOuter(0.1);
+        self.xscale = d3.scaleLinear()
+            .range([0, self.inner_width]);
 
         self.yscale = d3.scaleLinear()
-            .range([self.inner_height, 0]);
+            .range([0, self.inner_height]);
 
         self.xaxis = d3.axisBottom(self.xscale)
-            .ticks(['2020-1Q','2020-2Q','2020-3Q','2020-4Q','2021-1Q','2021-2Q','2021-3Q','2021-4Q'])
+            .tickFormat(function(d, i){
+                return "202" + parseInt(i/4) + "-Q" + (((d/50)%4)+1) //"Year1 Year2, etc depending on the tick value - 0,1,2,3,4"
+            })
             .tickSizeOuter(0);
 
         self.yaxis = d3.axisLeft(self.yscale)
@@ -45,6 +46,15 @@ class BarChart {
             .attr('transform', `translate(0, ${self.inner_height})`);
 
         self.yaxis_group = self.chart.append('g');
+
+        const title_space = 10;
+        self.svg.append('text')
+            .style('font-size', '20px')
+            .style('font-weight', 'bold')
+            .attr('text-anchor', 'middle')
+            .attr('x', self.config.width / 2)
+            .attr('y', self.config.margin.top - title_space)
+            .text( self.config.title );
 
         const xlabel_space = 40;
         self.svg.append('text')
@@ -67,18 +77,19 @@ class BarChart {
     update() {
         let self = this;
 
-        const data_map = d3.rollup( self.data, v => v.corona_number, d => d.period );
-        self.aggregated_data = Array.from( data_map, ([key,count]) => ({key,count}) );
+        const space = 10;
+        const xmin = d3.min(self.data, d => d.number);
+        const xmax = d3.max(self.data, d => d.number * 50)+ space;
+        self.xscale.domain([xmin, xmax]);
 
-        self.xvalue = d => d.key;
-        self.yvalue = d => d.count;
+        const ymin = d3.min(self.data, d => d.gameSoft_number) - space;
+        const ymax = d3.max(self.data, d => d.gameSoft_number) + space;
+        self.yscale.domain([ymax, ymin]);
 
-        const items = self.aggregated_data.map( self.xvalue );
-        self.xscale.domain(items);
+        self.line = d3.line()
+            .x( d => self.xscale(d.number * 50) )
+            .y( d => self.yscale(d.gameSoft_number) );
 
-        const ymin = 0;
-        const ymax = d3.max( self.aggregated_data, self.yvalue );
-        self.yscale.domain([ymin, ymax]);
 
         self.render();
     }
@@ -86,30 +97,26 @@ class BarChart {
     render() {
         let self = this;
 
-        self.chart.selectAll(".bar")
-            .data(self.aggregated_data)
-            .join("rect")
-            .attr("class", "bar")
-            .attr("x", d => self.xscale( self.xvalue(d) ) )
-            .attr("y", d => self.yscale( self.yvalue(d) ) )
-            .attr("width", self.xscale.bandwidth())
-            .attr("height", d => self.inner_height - self.yscale( self.yvalue(d) ))
-            .on('click', function(ev,d) {
-                const is_active = filter.includes(d.key);
-                if ( is_active ) {
-                    filter = filter.filter( f => f !== d.key );
-                }
-                else {
-                    filter.push( d.key );
-                }
-                Filter();
-                d3.select(this).classed('active', !is_active);
-            });
+        const line_width = 3;
+        const line_color = 'firebrick';
+        self.chart.append("path")
+            .attr('d', self.line(self.data))
+            .attr('stroke', line_color)
+            .attr('stroke-width', line_width)
+            .attr('fill', 'none');
 
-        self.xaxis_group
-            .call(self.xaxis);
+        const circle_radius = 5;
+        const circle_color = 'firebrick';
+        self.chart.selectAll("circle")
+            .data(self.data)
+            .enter()
+            .append("circle")
+            .attr('cx', self.line.x())
+            .attr('cy', self.line.y())
+            .attr('r', circle_radius)
+            .attr('fill', circle_color);
 
-        self.yaxis_group
-            .call(self.yaxis);
+        self.xaxis_group.call(self.xaxis);
+        self.yaxis_group.call(self.yaxis);
     }
 }

@@ -33,7 +33,9 @@ class LineChart {
             .range([0, self.inner_height]);
 
         self.xaxis = d3.axisBottom(self.xscale)
-            .ticks(['2020-1Q','2020-2Q','2020-3Q','2020-4Q','2021-1Q','2021-2Q','2021-3Q','2021-4Q'])
+            .tickFormat(function(d, i){
+                return "202" + parseInt(i/4) + "-Q" + (((d/50)%4)+1) //"Year1 Year2, etc depending on the tick value - 0,1,2,3,4"
+            })
             .tickSizeOuter(0);
 
         self.yaxis = d3.axisLeft(self.yscale)
@@ -75,9 +77,9 @@ class LineChart {
     update() {
         let self = this;
 
-        const space = 5;
-        const xmin = d3.min(self.data, d => d.number) - space;
-        const xmax = d3.max(self.data, d => d.number * 55) + space;
+        const space = 10;
+        const xmin = d3.min(self.data, d => d.number);
+        const xmax = d3.max(self.data, d => d.number * 50)+ space;
         self.xscale.domain([xmin, xmax]);
 
         const ymin = d3.min(self.data, d => d.gameSoft_number) - space;
@@ -85,25 +87,15 @@ class LineChart {
         self.yscale.domain([ymax, ymin]);
 
         self.line = d3.line()
-            .x( d => self.xscale(d.number * 55) )
+            .x( d => self.xscale(d.number * 50) )
             .y( d => self.yscale(d.gameSoft_number) );
 
-        self.area = d3.area()
-            .x( d => self.xscale(d.number * 55) )
-            .y1( d => self.yscale(d.gameSoft_number) )
-            .y0( self.inner_height );
 
         self.render();
     }
 
     render() {
         let self = this;
-
-        const area_color = 'mistyrose';
-        self.chart.append("path")
-            .attr('d', self.area(self.data))
-            .attr('stroke', area_color)
-            .attr('fill', area_color);
 
         const line_width = 3;
         const line_color = 'firebrick';
