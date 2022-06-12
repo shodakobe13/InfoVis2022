@@ -1,5 +1,7 @@
 let input_data;
-let line_chart
+let line_chart;
+let bar_chart;
+let barline_chart;
 let scatter_plot;
 
 d3.csv("https://shodakobe13.github.io/InfoVis2022/W15/final_data.csv")
