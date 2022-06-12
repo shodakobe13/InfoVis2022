@@ -34,12 +34,12 @@ class LineChart {
 
         self.xaxis = d3.axisBottom(self.xscale)
             .tickFormat(function(d, i){
-                return "202" + parseInt(i/4) + "-Q" + (((d/50)%4)+1) //"Year1 Year2, etc depending on the tick value - 0,1,2,3,4"
+                return "202" + parseInt(i/12) + "-" + (((d/50)%4)+1)
             })
             .tickSizeOuter(0);
 
         self.yaxis = d3.axisLeft(self.yscale)
-            .ticks(5)
+            .ticks(4)
             .tickSizeOuter(0);
 
         self.xaxis_group = self.chart.append('g')
@@ -79,18 +79,17 @@ class LineChart {
 
         const space = 10;
         const xmin = d3.min(self.data, d => d.number);
-        const xmax = d3.max(self.data, d => d.number * 50)+ space;
+        const xmax = d3.max(self.data, d => d.number * 50) + space;
         self.xscale.domain([xmin, xmax]);
 
-        const ymin = d3.min(self.data, d => d.gameSoft_number) - space;
-        const ymax = d3.max(self.data, d => d.gameSoft_number) + space;
+        const ymin = d3.min(self.data, d => d.temperature) - space;
+        const ymax = d3.max(self.data, d => d.temperature) + space;
         self.yscale.domain([ymax, ymin]);
 
         self.line = d3.line()
             .x( d => self.xscale(d.number * 50) )
-            .y( d => self.yscale(d.gameSoft_number) );
-
-
+            .y( d => self.yscale(d.temperature) );
+        
         self.render();
     }
 
