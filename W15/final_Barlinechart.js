@@ -2,11 +2,12 @@ class BarlineChart {
     constructor (config, data) {
         this.config = {
             parent: config.parent,
-            width: config.width || 800,
+            width: config.width || 1024,
             height: config.height || 256,
             margin: config.margin || {top:10, right:10, bottom:10, left:10},
             xlabel: config.xlabel || '',
             ylabel: config.ylabel || '',
+            y2label: config.y2label || '',
         };
         this.data = data;
         this.init();
@@ -33,6 +34,9 @@ class BarlineChart {
         self.yscale = d3.scaleLinear()
             .range([self.inner_height, 0]);
 
+        self.y2scale = d3.scaleLinear()
+            .range([self.inner_height, 0]);
+
         self.xaxis = d3.axisBottom(self.xscale)
             .ticks(5)
             .tickSizeOuter(0);
@@ -41,10 +45,17 @@ class BarlineChart {
             .ticks(5)
             .tickSizeOuter(0);
 
+        self.y2axis = d3.axisRight(self.y2scale)
+            .ticks(5)
+            .tickSizeOuter(0);
+
         self.xaxis_group = self.chart.append('g')
             .attr('transform', `translate(0, ${self.inner_height})`);
 
         self.yaxis_group = self.chart.append('g');
+
+        self.y2axis_group = self.chart.append('g')
+            .attr('transform', `translate(895,0)`);
 
         const xlabel_space = 40;
         self.svg.append('text')
@@ -62,6 +73,16 @@ class BarlineChart {
             .attr('text-anchor', 'middle')
             .attr('dy', '1em')
             .text( self.config.ylabel );
+
+        const y2label_space = 50;
+        self.svg.append('text')
+            .style('font-size', '12px')
+            .attr('transform', `rotate(-90)`)
+            .attr('y', self.config.margin.left - ylabel_space + 975)
+            .attr('x', -(self.config.height / 2) + 20)
+            .attr('text-anchor', 'middle')
+            .attr('dy', '1em')
+            .text( self.config.y2label );
     }
 
     update() {
@@ -69,6 +90,7 @@ class BarlineChart {
 
         self.xvalue = d => d.period;
         self.yvalue = d => d.corona_number;
+        self.y2value = d => d.temperature;
 
         const items = self.data.map( self.xvalue );
         self.xscale.domain(items);
@@ -77,9 +99,13 @@ class BarlineChart {
         const ymax = d3.max( self.data, self.yvalue );
         self.yscale.domain([ymin, ymax]);
 
+        const y2min = 0;
+        const y2max = d3.max( self.data, self.y2value );
+        self.y2scale.domain([y2min, y2max]);
+
         self.line = d3.line()
-            .x(function(d,i) { return self.xvalue; })
-            .y( d => self.yscale(d.temperature * 1000) );
+            .x( d => self.xscale( self.xvalue(d) ) + 15)
+            .y( d => self.y2scale(d.temperature) );
 
         self.render();
     }
@@ -120,5 +146,8 @@ class BarlineChart {
 
         self.yaxis_group
             .call(self.yaxis);
+
+        self.y2axis_group
+            .call(self.y2axis);
     }
 }

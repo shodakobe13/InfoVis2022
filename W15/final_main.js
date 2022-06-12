@@ -35,15 +35,16 @@ d3.csv("https://shodakobe13.github.io/InfoVis2022/W15/final_data.csv")
             parent: '#drawing_region_barlinechart',
             width: 1024,
             height: 256,
-            margin: {top:10, right:10, bottom:50, left:80},
+            margin: {top:10, right:50, bottom:50, left:80},
             xlabel: 'Year/Mon',
             ylabel: 'corona-number',
+            y2label: 'temperature',
         }, input_data );
         barline_chart.update();
 
         scatter_plot = new ScatterPlot( {
             parent: '#drawing_region_scatterplot',
-            width: 1400,
+            width: 1024,
             height: 256,
             margin: {top:10, right:10, bottom:80, left:80},
             xlabel: 'temperature',
