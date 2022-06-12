@@ -7,7 +7,6 @@ class BarChart {
             margin: config.margin || {top:10, right:10, bottom:10, left:10},
             xlabel: config.xlabel || '',
             ylabel: config.ylabel || '',
-            cscale: config.cscale
         };
         this.data = data;
         this.init();
@@ -16,7 +15,7 @@ class BarChart {
     init() {
         let self = this;
 
-        self.svg = d3.select(self.config.parent)
+        self.svg = d3.select( self.config.parent )
             .attr('width', self.config.width)
             .attr('height', self.config.height);
 
@@ -26,87 +25,53 @@ class BarChart {
         self.inner_width = self.config.width - self.config.margin.left - self.config.margin.right;
         self.inner_height = self.config.height - self.config.margin.top - self.config.margin.bottom;
 
-        self.xscale = d3.scaleBand()
-            .range([0, self.inner_width])
-            .paddingInner(0.2)
-            .paddingOuter(0.1);
+        self.xscale = d3.scaleLinear()
+            .range( [0, self.inner_width] );
 
-        self.yscale = d3.scaleLinear()
-            .range([self.inner_height, 0]);
+        self.yscale = d3.scaleBand()
+            .domain(self.data.map(d => d.period))
+            .range( [self.inner_height, 0] )
+            .paddingInner(0.1);
 
-        self.xaxis = d3.axisBottom(self.xscale)
-            .ticks(['setosa','versicolor','virginica'])
-            .tickSizeOuter(0);
-
-        self.yaxis = d3.axisLeft(self.yscale)
+        self.xaxis = d3.axisBottom( self.xscale )
             .ticks(5)
             .tickSizeOuter(0);
 
         self.xaxis_group = self.chart.append('g')
-            .attr('transform', `translate(0, ${self.inner_height})`);
+            .attr('transform', `translate(0, ${self.inner_height} )`);
+
+        self.yaxis = d3.axisLeft( self.yscale )
+            .tickSizeOuter(0);
 
         self.yaxis_group = self.chart.append('g');
 
-        const xlabel_space = 40;
-        self.svg.append('text')
-            .style('font-size', '12px')
-            .attr('x', self.config.width / 2)
-            .attr('y', self.inner_height + self.config.margin.top + xlabel_space)
-            .text( self.config.xlabel );
-
-        const ylabel_space = 50;
-        self.svg.append('text')
-            .style('font-size', '12px')
-            .attr('transform', `rotate(-90)`)
-            .attr('y', self.config.margin.left - ylabel_space)
-            .attr('x', -(self.config.height / 2))
-            .attr('text-anchor', 'middle')
-            .attr('dy', '1em')
-            .text( self.config.ylabel );
     }
 
     update() {
         let self = this;
-
-        const space = 10;
-        const xmin = d3.min(self.data, d => d.number);
-        const xmax = d3.max(self.data, d => d.number * 50) + space;
-        self.xscale.domain([xmin, xmax]);
-
-        const ymin = d3.min(self.data, d => d.temperature) - space;
-        const ymax = d3.max(self.data, d => d.temperature) + space;
-        self.yscale.domain([ymax, ymin]);
-
+        const xmin = 0;
+        const xmax = d3.max( self.data, d => d.corona_number );
+        self.xscale.domain( [xmin, xmax] );
+        self.yscale.domain( self.data.map(d => d.period) )
         self.render();
     }
 
     render() {
         let self = this;
 
-        self.chart.selectAll(".bar")
+        self.chart.selectAll("rect")
             .data(self.data)
-            .join("rect")
-            .attr("class", "bar")
-            .attr("x", d => self.xscale( self.xvalue(d) ) )
-            .attr("y", d => self.yscale( self.yvalue(d) ) )
-            .attr("width", self.xscale.bandwidth())
-            .attr("height", d => self.inner_height - self.yscale( self.yvalue(d) ))
-            .on('click', function(ev,d) {
-                const is_active = filter.includes(d.key);
-                if ( is_active ) {
-                    filter = filter.filter( f => f !== d.key );
-                }
-                else {
-                    filter.push( d.key );
-                }
-                Filter();
-                d3.select(this).classed('active', !is_active);
-            });
+            .enter()
+            .append("rect")
+            .attr("x", 0 )
+            .attr("y", d => self.yscale( d.period ) )
+            .attr("width", d => self.xscale( d.corona_number ) )
+            .attr("height", self.yscale.bandwidth());
 
         self.xaxis_group
-            .call(self.xaxis);
+            .call( self.xaxis );
 
         self.yaxis_group
-            .call(self.yaxis);
+            .call( self.yaxis );
     }
 }

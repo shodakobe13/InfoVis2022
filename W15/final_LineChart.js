@@ -34,7 +34,7 @@ class LineChart {
 
         self.xaxis = d3.axisBottom(self.xscale)
             .tickFormat(function(d, i){
-                return "202" + parseInt(i/12) + "-" + (((d/50)%4)+1)
+                return '2' + parseInt(d/600)+'/'+((d/50)%12+1);
             })
             .tickSizeOuter(0);
 

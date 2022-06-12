@@ -1,7 +1,6 @@
 let input_data;
 let line_chart
 let scatter_plot;
-let filter = [];
 
 d3.csv("https://shodakobe13.github.io/InfoVis2022/W15/final_data.csv")
     .then( data => {
@@ -17,10 +16,20 @@ d3.csv("https://shodakobe13.github.io/InfoVis2022/W15/final_data.csv")
             width: 512,
             height: 256,
             margin: {top:10, right:10, bottom:50, left:50},
-            xlabel: 'Period',
+            xlabel: 'Year/Mon',
             ylabel: 'temperaturer',
         }, input_data );
         line_chart.update();
+
+        bar_chart = new BarChart( {
+            parent: '#drawing_region_barchart',
+            width: 512,
+            height: 256,
+            margin: {top:10, right:10, bottom:50, left:50},
+            xlabel: 'Year/Mon',
+            ylabel: 'number',
+        }, input_data );
+        bar_chart.update();
 
         scatter_plot = new ScatterPlot( {
             parent: '#drawing_region_scatterplot',
@@ -37,12 +46,3 @@ d3.csv("https://shodakobe13.github.io/InfoVis2022/W15/final_data.csv")
         console.log( error );
     });
 
-function Filter() {
-    if ( filter.length == 0 ) {
-        scatter_plot.data = input_data;
-    }
-    else {
-        scatter_plot.data = input_data.filter( d => filter.includes( d.species ) );
-    }
-    scatter_plot.update();
-}
