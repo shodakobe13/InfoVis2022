@@ -3,7 +3,7 @@ class ScatterPlot {
     constructor( config, data ) {
         this.config = {
             parent: config.parent,
-            width: config.width || 512,
+            width: config.width || 1024,
             height: config.height || 256,
             margin: config.margin || {top:10, right:10, bottom:10, left:10},
             xlabel: config.xlabel || '',
@@ -30,10 +30,10 @@ class ScatterPlot {
             .range( [0, self.inner_width] );
 
         self.yscale = d3.scaleLinear()
-            .range( [self.inner_height, 0] );
+            .range( [0, self.inner_height] );
 
         self.xaxis = d3.axisBottom( self.xscale )
-            .ticks(5)
+            .ticks(8)
             .tickSizeOuter(0);
 
         self.yaxis = d3.axisLeft( self.yscale )
@@ -68,7 +68,7 @@ class ScatterPlot {
     update() {
         let self = this;
 
-        self.xvalue = d => d.gameSoft_number;
+        self.xvalue = d => d.temperature;
         self.yvalue = d => d.corona_number;
 
         const space = 10;
@@ -90,19 +90,18 @@ class ScatterPlot {
             .data(self.data)
             .join('circle');
 
-        const circle_color = 'steelblue';
-        const circle_radius = 5;
+        const circle_radius = 8;
         circles
             .attr("r", circle_radius )
             .attr("cx", d => self.xscale( self.xvalue(d) ) )
             .attr("cy", d => self.yscale( self.yvalue(d) ) )
-            .attr("fill", d => self.config.cscale( self.cvalue(d) ) );
+            .attr("fill", "lightgreen" );
 
         circles
             .on('mouseover', (e,d) => {
                 d3.select('#tooltip')
                     .style('opacity', 1)
-                    .html(`<div class="tooltip-label">${d.period}</div>(${d.gameSoft_number}, ${d.corona_number})`);
+                    .html(`<div class="tooltip-label">${d.period}</div>(${d.temperature}, ${d.corona_number})`);
             })
             .on('mousemove', (e) => {
                 const padding = 10;

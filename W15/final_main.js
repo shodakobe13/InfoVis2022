@@ -13,9 +13,9 @@ d3.csv("https://shodakobe13.github.io/InfoVis2022/W15/final_data.csv")
 
         line_chart = new LineChart({
             parent: '#drawing_region_linechart',
-            width: 512,
+            width: 1024,
             height: 256,
-            margin: {top:10, right:10, bottom:50, left:50},
+            margin: {top:10, right:10, bottom:50, left:80},
             xlabel: 'Year/Mon',
             ylabel: 'temperature',
         }, input_data );
@@ -23,20 +23,30 @@ d3.csv("https://shodakobe13.github.io/InfoVis2022/W15/final_data.csv")
 
         bar_chart = new BarChart( {
             parent: '#drawing_region_barchart',
-            width: 512,
+            width: 1024,
             height: 256,
-            margin: {top:10, right:10, bottom:50, left:50},
+            margin: {top:10, right:10, bottom:50, left:80},
             xlabel: 'Year/Mon',
             ylabel: 'corona-number',
         }, input_data );
         bar_chart.update();
 
+        barline_chart = new BarlineChart( {
+            parent: '#drawing_region_barlinechart',
+            width: 1024,
+            height: 256,
+            margin: {top:10, right:10, bottom:50, left:80},
+            xlabel: 'Year/Mon',
+            ylabel: 'corona-number',
+        }, input_data );
+        barline_chart.update();
+
         scatter_plot = new ScatterPlot( {
             parent: '#drawing_region_scatterplot',
-            width: 512,
+            width: 1400,
             height: 256,
-            margin: {top:10, right:10, bottom:50, left:50},
-            xlabel: 'gameSoft-number',
+            margin: {top:10, right:10, bottom:80, left:80},
+            xlabel: 'temperature',
             ylabel: 'Corona-number',
         }, input_data );
         scatter_plot.update();

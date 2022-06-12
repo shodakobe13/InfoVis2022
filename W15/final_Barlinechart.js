@@ -1,4 +1,4 @@
-class BarChart {
+class BarlineChart {
     constructor (config, data) {
         this.config = {
             parent: config.parent,
@@ -77,6 +77,10 @@ class BarChart {
         const ymax = d3.max( self.data, self.yvalue );
         self.yscale.domain([ymin, ymax]);
 
+        self.line = d3.line()
+            .x(function(d,i) { return self.xvalue; })
+            .y( d => self.yscale(d.temperature * 1000) );
+
         self.render();
     }
 
@@ -91,6 +95,25 @@ class BarChart {
             .attr("fill","steelblue")
             .attr("width", self.xscale.bandwidth())
             .attr("height", d => self.inner_height - self.yscale( self.yvalue(d) ));
+
+        const line_width = 3;
+        const line_color = 'firebrick';
+        self.chart.append("path")
+            .attr('d', self.line(self.data))
+            .attr('stroke', line_color)
+            .attr('stroke-width', line_width)
+            .attr('fill', 'none');
+
+        const circle_radius = 5;
+        const circle_color = 'firebrick';
+        self.chart.selectAll("circle")
+            .data(self.data)
+            .enter()
+            .append("circle")
+            .attr('cx', self.line.x())
+            .attr('cy', self.line.y())
+            .attr('r', circle_radius)
+            .attr('fill', circle_color);
 
         self.xaxis_group
             .call(self.xaxis);
