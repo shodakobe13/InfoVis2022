@@ -88,7 +88,7 @@ class BarChart {
             .join("rect")
             .attr("x", d => self.xscale( self.xvalue(d) ) )
             .attr("y", d => self.yscale( self.yvalue(d) ) )
-            .attr("fill", function(d, i){
+            .attr("fill", function(d){
                 if(d.year == 20){
                     return "steelblue"
                 }
