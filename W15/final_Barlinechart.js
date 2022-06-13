@@ -118,7 +118,14 @@ class BarlineChart {
             .join("rect")
             .attr("x", d => self.xscale( self.xvalue(d) ) )
             .attr("y", d => self.yscale( self.yvalue(d) ) )
-            .attr("fill","steelblue")
+            .attr("fill", function(d, i){
+                if(d.year == 20){
+                    return "steelblue"
+                }
+                else{
+                    return "skyblue"
+                }
+            } )
             .attr("width", self.xscale.bandwidth())
             .attr("height", d => self.inner_height - self.yscale( self.yvalue(d) ))
             .on('click', function(ev,d) {
