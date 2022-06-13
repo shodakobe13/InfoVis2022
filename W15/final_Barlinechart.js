@@ -127,7 +127,7 @@ class BarlineChart {
                     filter = filter.filter( f => f !== d.year );
                 }
                 else {
-                    filter.push( d.key );
+                    filter.push( d.year );
                 }
                 Filter();
                 d3.select(this).classed('active', !is_active);
