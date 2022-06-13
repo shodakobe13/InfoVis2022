@@ -15,6 +15,9 @@ d3.csv("https://shodakobe13.github.io/InfoVis2022/W15/final_data.csv")
             d.temperature = +d.temperature;
         });
 
+        const color_scale = d3.scaleOrdinal( d3.schemeCategory10 );
+        color_scale.domain(['20','21']);
+
         line_chart = new LineChart({
             parent: '#drawing_region_linechart',
             width: 1024,

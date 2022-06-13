@@ -8,6 +8,7 @@ class ScatterPlot {
             margin: config.margin || {top:10, right:10, bottom:10, left:10},
             xlabel: config.xlabel || '',
             ylabel: config.ylabel || '',
+            cscale: config.cscale
         }
         this.data = data;
         this.init();
@@ -68,6 +69,7 @@ class ScatterPlot {
     update() {
         let self = this;
 
+        self.cvalue = d => d.year;
         self.xvalue = d => d.temperature;
         self.yvalue = d => d.corona_number;
 
@@ -95,7 +97,7 @@ class ScatterPlot {
             .attr("r", circle_radius )
             .attr("cx", d => self.xscale( self.xvalue(d) ) )
             .attr("cy", d => self.yscale( self.yvalue(d) ) )
-            .attr("fill", "lightgreen" );
+            .attr("fill", d => self.config.cscale( self.cvalue(d) ) );
 
         circles
             .on('mouseover', (e,d) => {
