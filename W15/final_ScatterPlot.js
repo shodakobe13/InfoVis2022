@@ -70,7 +70,6 @@ class ScatterPlot {
 
         self.xvalue = d => d.temperature;
         self.yvalue = d => d.corona_number;
-        self.cyear = d => d.year;
 
         const space = 10;
         const xmin = d3.min( self.data, self.xvalue );
