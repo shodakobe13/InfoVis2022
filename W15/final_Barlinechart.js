@@ -120,7 +120,18 @@ class BarlineChart {
             .attr("y", d => self.yscale( self.yvalue(d) ) )
             .attr("fill","steelblue")
             .attr("width", self.xscale.bandwidth())
-            .attr("height", d => self.inner_height - self.yscale( self.yvalue(d) ));
+            .attr("height", d => self.inner_height - self.yscale( self.yvalue(d) ))
+            .on('click', function(ev,d) {
+                const is_active = filter.includes(d.year);
+                if ( is_active ) {
+                    filter = filter.filter( f => f !== d.year );
+                }
+                else {
+                    filter.push( d.key );
+                }
+                Filter();
+                d3.select(this).classed('active', !is_active);
+            });
 
         const line_width = 3;
         const line_color = 'firebrick';

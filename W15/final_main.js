@@ -3,12 +3,14 @@ let line_chart;
 let bar_chart;
 let barline_chart;
 let scatter_plot;
+let filter = [];
 
 d3.csv("https://shodakobe13.github.io/InfoVis2022/W15/final_data.csv")
     .then( data => {
         input_data = data;
         input_data.forEach( d => {
             d.number = +d.number;
+            d.year = +d.year;
             d.corona_number = +d.corona_number;
             d.temperature = +d.temperature;
         });
@@ -59,3 +61,12 @@ d3.csv("https://shodakobe13.github.io/InfoVis2022/W15/final_data.csv")
         console.log( error );
     });
 
+function Filter() {
+    if ( filter.length == 0 ) {
+        scatter_plot.data = input_data;
+    }
+    else {
+        scatter_plot.data = input_data.filter( d => filter.includes( d.year ) );
+    }
+    scatter_plot.update();
+}
